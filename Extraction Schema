@@ -1,0 +1,102 @@
+extraction_schema = """
+{
+  "author_id": null,
+  "drug_group": null,
+  "route_of_administration": null,
+
+  "include": null,
+  "exclusion_reason": null,
+
+  "longitudinal_criteria": {
+    "n_posts": null,
+    "days_between_first_and_last_post": null,
+    "meets_minimum_requirement": null
+  },
+
+  "treatment_history": {
+    "treatment_start_date": null,
+    "treatment_start_source": null,
+    "reported_treatment_duration": null
+  },
+
+  "drug_switching": {
+    "previous_glp1": [],
+    "current_glp1": [],
+    "reason_for_switch": []
+  },
+
+  "patient_profile": {
+    "age_years": null,
+    "sex_gender": null,
+    "race_ethnicity": null,
+    "height_cm": null,
+
+    "baseline_conditions": [
+      {
+        "specific_label": null,
+        "visualisation_group": null
+      }
+    ]
+  },
+
+  "baseline_metrics": {
+    "starting_weight_kg": null,
+    "starting_weight_lb": null,
+    "starting_bmi": null,
+    "goal_weight_kg": null,
+    "goal_weight_lb": null
+  },
+
+  "timeline_events": [
+    {
+      "post_number": null,
+      "date": null,
+
+      "treatment_event": {
+        "specific_label": null,
+        "visualisation_group": null
+      },
+
+      "drug": null,
+      "dose_mg": null,
+      "weight_kg": null,
+      "weight_lb": null,
+      "bmi": null,
+
+      "desired_effects": [
+        {
+          "specific_label": null,
+          "visualisation_group": null
+        }
+      ],
+
+      "adverse_effects": [
+        {
+          "specific_label": null,
+          "visualisation_group": null,
+          "severity": null
+        }
+      ],
+
+      "confounding_variables": [
+        {
+          "specific_label": null,
+          "visualisation_group": null
+        }
+      ],
+
+      "adherence_or_access_issues": [
+        {
+          "specific_label": null,
+          "visualisation_group": null
+        }
+      ],
+
+      "explicit_notes": [],
+      "inferred_notes": []
+    }
+  ],
+
+  "journey_summary": null
+}
+"""
