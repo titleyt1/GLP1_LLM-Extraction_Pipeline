@@ -43,3 +43,40 @@ When include = false:
   you MAY still extract their own desired/adverse effects where clearly present.
 When include = true: set exclusion_reason = null.
 """
+
+section = """VISUALISATION GROUPING
+Every desired effect, adverse effect, confounder, treatment_event, adherence/access
+issue and baseline condition must be returned as a SEPARATE item with BOTH:
+- specific_label: the exact issue as reported, concise and lower-case. Keep one
+  distinct issue per item - never merge two issues (e.g. reduced food noise AND
+  reduced cravings) into one item or one label.
+- visualisation_group: a broad, chart-ready category, lower-case.
+
+How to choose visualisation_group:
+1. PREFER the vocabulary below. If an existing group reasonably fits the concept,
+   use it verbatim - even when the wording in the post differs. Match on meaning,
+   not exact words.
+2. If NO existing group fits, CREATE a new group, following the naming rules below,
+   so the same concept gets the same label in any other journey. Do not fall back
+   to "other" just to avoid naming something.
+3. Use "other" ONLY as a last resort - when no clinically or pharmacovigilance-
+   meaningful label can be applied consistently across journeys (e.g. vague,
+   off-topic or uninterpretable content). Prefer a real category whenever one exists.
+
+Naming rules for a NEW group (so identical concepts get identical strings across
+independent journeys):
+- lower-case; a short noun phrase naming the concept, not a sentence.
+- keep all specific detail (symptom, dose, number, body part) in specific_label,
+  NOT in the group name. The group is the reusable bucket.
+- do NOT encode severity, dose, frequency, dates or quantifiers in the group name.
+- follow the directional patterns already in use for effects:
+  "reduced X" / "improved X" / "increased X" / "worsened X".
+- for a medical condition or comorbidity, use the recognised clinical term,
+  singular (e.g. "hypothyroidism", "gallbladder disease").
+- self-administered supplements -> "supplement use"; prescribed medications ->
+  "co-medication". Never combine the two.
+- reuse a group you have already created earlier in THIS journey for the same
+  concept, so a journey never contains two spellings of one category.
+
+PREFERRED VOCABULARY (by field):
+{vocab}"""
