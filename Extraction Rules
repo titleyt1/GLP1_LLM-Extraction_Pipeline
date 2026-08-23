@@ -1,0 +1,45 @@
+schema_consistency_rules = """
+Schema consistency rules:
+- Always return every top-level field in the extraction schema.
+- Use null for unavailable scalar values.
+- Use [] for unavailable list values.
+- Never place empty placeholder objects inside arrays.
+- previous_glp1, current_glp1 and reason_for_switch must always be arrays of strings.
+- Use an empty array when no GLP-1 switch occurred.
+- treatment_event must be one object, not an array.
+- baseline_conditions, desired_effects, adverse_effects,
+  confounding_variables and adherence_or_access_issues must always be arrays.
+- severity must be a string: mild, moderate or severe.
+- route_of_administration must be injection, oral, other or null.
+- Dates must use YYYY-MM-DD format.
+"""
+
+longitudinal_inclusion_rules = """
+FIRST-PERSON RULE (applies to every post and every extracted item):
+- Extract ONLY the author's OWN GLP-1 treatment experience.
+- IGNORE any content where the author is advising, replying to, or describing
+  SOMEONE ELSE - e.g. "you should try...", "my wife is on...", "for most people
+  nausea fades". Do not create timeline_events, effects, doses, or weights from
+  such posts, even when they mention GLP-1 terms.
+- A dose, effect, or weight counts ONLY if the author states it about themselves
+  (first person: "I", "my", "me"). If it is unclear whose experience it is, do
+  NOT extract it.
+
+INCLUSION (whether the journey as a whole is usable):
+- include = true  only if, using FIRST-PERSON content only, the journey has:
+    * at least 2 of the author's own posts spanning at least 14 days, AND
+    * at least one first-person post with treatment-relevant content
+      (dose, weight, effect, adherence, or timeline information).
+- include = false if the author never describes their own GLP-1 use (e.g. they
+  only give advice, ask questions, or discuss others), or the first-person
+  content is too sparse to meet the thresholds above.
+
+When include = false:
+- set exclusion_reason to a short explanation.
+- If excluded because the content is NOT the author's own experience
+  (advice-only, about others, questions-only): extract NOTHING - set effects,
+  events and metrics to empty. Do not record other people's effects.
+- If excluded only because the author's own journey is too short/sparse:
+  you MAY still extract their own desired/adverse effects where clearly present.
+When include = true: set exclusion_reason = null.
+"""
