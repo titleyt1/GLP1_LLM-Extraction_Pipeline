@@ -1,0 +1,71 @@
+author_journey_prompt = f"""
+You extract a structured, longitudinal treatment history for GLP-1 medications from one Reddit author's posts.
+
+OUTPUT FORMAT
+- Return exactly one valid JSON object and nothing else (no markdown, no commentary).
+- Follow the schema below exactly: same field names, same nesting. Do not add, drop or rename fields.
+- Unavailable scalar -> null. Unavailable list -> [].
+- Do not invent details. Extract only what the text supports, and keep explicit statements (explicit_notes) separate from inferences (inferred_notes).
+
+INPUT
+- All posts are from ONE author, in chronological order, each with a POST number and date.
+- drug_group is provided as metadata; use it to label the drug ONLY when the specific drug is not named in the text.
+
+WHAT TO CAPTURE
+- The journey over time: drug, dose, weight/BMI, desired effects, adverse effects, adherence/access issues and confounders.
+- Timing, taken from the post dates.
+- An overall read of whether the evidence suggests efficacy, safety concerns, both or neither (journey_summary).
+
+INCLUSION
+{longitudinal_inclusion_rules}
+Always extract desired and adverse effects even when include = false.
+
+TIMELINE COMPLETENESS
+- Produce ONE timeline_events entry for EVERY post that contains any dose, weight,
+  effect, adverse event, confounder, or adherence/access information.
+- Do NOT merge multiple posts into one event, and do NOT summarise the journey into
+  a few representative events. A long journey must produce many events.
+- Copy post_number EXACTLY from the input for each event; never invent post numbers.
+- Omit a post only when it has no treatment-relevant information.
+
+DRUG & DOSE
+- Record drug names as written; map obvious misspellings to the intended GLP-1, but do not guess when unclear.
+- Label every post with a GLP-1; if only drug_group is known, use that.
+- Record non-GLP-1 medications as confounding_variables, never as the treatment drug.
+- Capture dose transitions as concrete values (e.g. "0.25mg -> 0.5mg"), not vague phrases ("titrated up").
+- drug_switching applies ONLY between two GLP-1s (e.g. Ozempic -> Wegovy). GLP-1 -> non-GLP-1 (metformin, an antidepressant) is NOT a switch.
+
+DEMOGRAPHICS, HEIGHT, BMI
+- sex_gender: parse forms like 34F / 28M and explicit words (male, female, woman, man).
+- height_cm: only if explicitly stated; convert (1 in = 2.54 cm, 1 ft = 30.48 cm), else null.
+- Compute bmi = weight_kg / (height_m squared) whenever both are known (1 lb = 0.453592 kg).
+
+DATES & DURATION
+- reported_treatment_duration only when explicitly quantified ("3 weeks", "2 years").
+- You may infer duration from a stated start plus the post date (e.g. "started in November" + post on 2026-03-25 -> about 4 months), but do not overestimate; vague spans ("a few weeks") -> null.
+- All dates as YYYY-MM-DD.
+
+CONFOUNDERS & CO-MEDICATIONS
+- Extract explicitly mentioned confounders (e.g. PCOS, diabetes, menopause, thyroid disease, ADHD, depression, steroid/peptide use, insulin resistance, diet or exercise changes, calorie deficit, pregnancy, smoking, alcohol).
+- Do NOT exclude an author merely for a comorbidity or a co-medication; record these as confounders. Exclude only when the drug discussion is purely hypothetical (no personal use).
+
+EFFECTS & SEVERITY
+- Desired effects include weight loss, appetite/satiety change, reduced food noise/cravings, glucose control, improved mobility.
+- Adverse effects include nausea, vomiting, constipation, diarrhea, reflux, bloating, headache, fatigue, plateau, weight regain.
+- Whenever an adverse effect is present, set severity to the highest burden reported during treatment: mild (tolerable, little functional impact), moderate (impairs daily function or forces a dose change), severe (causes interruption/discontinuation, medical concern or major distress). Estimate from context if not stated.
+
+ACTIVITY
+- exercise/activity level as low / moderate / high when stated, else null.
+
+{visualisation_grouping}
+
+{schema_consistency_rules}
+
+SCHEMA:
+{extraction_schema}
+
+POSTS:
+{{text}}
+
+OUTPUT:
+"""
