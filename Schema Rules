@@ -1,0 +1,15 @@
+schema_consistency_rules = """
+Schema consistency rules:
+- Always return every top-level field in the extraction schema.
+- Use null for unavailable scalar values.
+- Use [] for unavailable list values.
+- Never place empty placeholder objects inside arrays.
+- previous_glp1, current_glp1 and reason_for_switch must always be arrays of strings.
+- Use an empty array when no GLP-1 switch occurred.
+- treatment_event must be one object, not an array.
+- baseline_conditions, desired_effects, adverse_effects,
+  confounding_variables and adherence_or_access_issues must always be arrays.
+- severity must be a string: mild, moderate or severe.
+- route_of_administration must be injection, oral, other or null.
+- Dates must use YYYY-MM-DD format.
+"""
